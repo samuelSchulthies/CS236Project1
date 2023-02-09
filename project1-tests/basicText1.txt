@@ -8,7 +8,7 @@
 %
 *
 +
-Schemes *
+Schemes*
 Queries
 marriage
 :-
