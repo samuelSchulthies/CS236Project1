@@ -2,6 +2,7 @@
 #include "Scanner.h"
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -15,15 +16,14 @@ int main(int argc, char** argv) {
         cout << fileName << " not found or could not be opened" << endl;
         return 1;
     }
-    while(!input.eof()){
-        string datalogAdder;
-        getline(input, datalogAdder);
-        datalogInput += datalogAdder + "\n";
-    }
+    stringstream ss;
+    ss << input.rdbuf();
+    datalogInput = ss.str();
 
     datalogString.scanToken(datalogInput);
     for (unsigned int i = 0; i < datalogString.tokenStorage.size(); ++i) {
         cout << datalogString.tokenStorage.at(i).toString() << endl;
     }
+    cout << "Total Tokens = " << datalogString.tokenStorage.size() << endl;
     return 0;
 }

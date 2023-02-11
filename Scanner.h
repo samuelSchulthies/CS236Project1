@@ -23,18 +23,19 @@ public:
             while (isspace(input.at(0))) {
                 if (input.at(0) == '\n'){
                     lineVal += 1;
-                    input.erase(0, 1);
-                    if (input.empty()){
-                        Token e = Token(EOF_TYPE, "", lineVal);
-                        tokenStorage.push_back(e);
-                        return;
-                    }
                 }
+                input.erase(0, 1);
                 if (input.empty()){
                     Token e = Token(EOF_TYPE, "", lineVal);
                     tokenStorage.push_back(e);
                     return;
                 }
+//                input.erase(0, 1);
+//                if (input.empty()){
+//                    Token e = Token(EOF_TYPE, "", lineVal);
+//                    tokenStorage.push_back(e);
+//                    return;
+//                }
             }
 
             //Identifies the character and creates the appropriate token
@@ -183,10 +184,19 @@ public:
                     tokenStorage.push_back(e);
                     return;
                 }
+                int stringNewLineCounter = 0;
                 while (input.at(0) != '\'') {
+                    if (input.at(0) == '\n') {
+                        lineVal += 1;
+                        stringNewLineCounter += 1; //By subtracting the number of new lines inside the loops, we can attain the starting line of a string
+                    }
                     multiChar += input.at(0);
                     input.erase(0, 1);
                     if (input.empty()) {
+                        if (multiChar.back() != '\''){
+                            Token t = Token(UNDEFINED, multiChar, lineVal - stringNewLineCounter);
+                            tokenStorage.push_back(t);
+                        }
                         Token e = Token(EOF_TYPE, "", lineVal);
                         tokenStorage.push_back(e);
                         return;
@@ -199,7 +209,7 @@ public:
                     tokenStorage.push_back(e);
                     return;
                 }
-                Token t = Token(STRING, multiChar, lineVal);
+                Token t = Token(STRING, multiChar, lineVal - stringNewLineCounter);
                 tokenStorage.push_back(t);
             }
             else{
